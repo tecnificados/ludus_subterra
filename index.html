@@ -1,0 +1,170 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ludus Subterra</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+ <div>
+  <div class="logo">LUDUS SUBTERRA</div>
+  <div class="sub">RETRO DUNGEON · 16 BITS</div>
+ </div>
+ <div class="header-actions">
+  <button id="musicToggle" type="button" aria-label="Silenciar música" aria-pressed="false">🔊 MÚSICA</button>
+  <button id="highScoresBtn" type="button">HIGH SCORES</button>
+  <button id="helpBtn">¿CÓMO SE JUEGA?</button>
+ </div>
+</header>
+
+<main>
+ <section class="topline">
+  <div class="stat">
+   <label>VIDA</label>
+   <strong id="hp">20 / 20</strong>
+   <div class="hpbar"><div class="hpfill" id="hpfill"></div></div>
+  </div>
+  <div class="stat">
+   <label>MAZMORRA RESTANTE</label>
+   <strong id="remaining">52</strong>
+  </div>
+  <div class="stat">
+   <label>HABITACIÓN</label>
+   <strong id="roomNo">01</strong>
+   <div class="small" id="roomStatus">Puedes usar varias pociones</div>
+  </div>
+ </section>
+
+ <section class="panel inventory">
+  <div>
+   <span class="eyebrow">ARMA ACTUAL</span>
+   <div id="weaponCard" class="weapon-card empty">SIN ARMA<br>—</div>
+  </div>
+
+  <div>
+   <div class="eyebrow">INVENTARIO Y LÍMITE DE COMBATE</div>
+   <strong id="weaponName" style="color:var(--gold)">Todavía no has encontrado un arma</strong>
+
+   <div class="weapon-meta">
+    <span class="pill" id="weaponPower">DAÑO RESTANTE: —</span>
+    <span class="pill" id="weaponLimit">ÚLTIMO MONSTRUO: SIN ARMA</span>
+   </div>
+
+   <div class="monster-stack">
+    CRIATURAS DERROTADAS: <strong id="totalDefeated">0</strong>
+   </div>
+  </div>
+ </section>
+
+ <div class="room-head">
+  <h2>⚔ HABITACIÓN ACTUAL</h2>
+  <span class="small" id="roomProgress">0 / 3 resueltas</span>
+ </div>
+
+ <section class="cards" id="room"></section>
+
+ <div class="actions">
+  <button class="primary" id="newBtn">NUEVA PARTIDA</button>
+  <button id="avoidBtn" disabled>ESCAPAR DE LA SALA</button>
+  <button id="saveBtn">GUARDAR</button>
+  <button id="resetSaveBtn">BORRAR GUARDADO</button>
+ </div>
+
+ <div class="message" id="message">Pulsa «Nueva partida» para entrar en la mazmorra.</div>
+
+ <section class="panel" style="margin-top:14px">
+  <span class="eyebrow">CRÓNICA DE LA MAZMORRA</span>
+  <ol class="log" id="log">
+   <li>Tu aventura todavía no ha comenzado.</li>
+  </ol>
+ </section>
+
+ <div class="legend">
+  <span>♠ ♣ MONSTRUOS</span>
+  <span>♦ ARMAS</span>
+  <span>♥ POCIONES</span>
+  <span>AS = 14 · K = 13 · Q = 12 · J = 11</span>
+ </div>
+</main>
+
+<footer>
+ <div>Ludus Subterra · Juego local para navegador · Tu partida se guarda en este dispositivo</div>
+ <div class="author-credit">Creado por Juan Carlos Ballesteros Hermida · <a href="https://www.tecnificados.com" target="_blank" rel="noopener noreferrer">Tecnificados</a> · <a href="https://www.tecnificados.com" target="_blank" rel="noopener noreferrer">www.tecnificados.com</a></div>
+ <div class="music-credit">Música: «Orchestral Fantasy - WAR» © 2024 Rusted Music Studio - Fabien C. · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>. Reproducción sintetizada en el navegador · <a href="audio/License.txt">Licencia incluida</a>.</div>
+</footer>
+
+<div class="overlay" id="overlay">
+ <div class="modal">
+  <h2>LUDUS SUBTERRA</h2>
+  <p>Una mazmorra. 52 cartas. 20 puntos de vida.<br>
+  Sobrevive usando tus armas, administrando tus pociones y eligiendo bien tus combates.</p>
+  <section id="endHistory" class="end-history" aria-label="Historial completo de la partida">
+   <h3>HISTORIAL COMPLETO</h3>
+   <ol id="endLog" class="end-history-list"></ol>
+  </section>
+  <button class="primary" id="startBtn">COMENZAR PARTIDA</button>
+  <button id="viewScoresBtn" type="button">HIGH SCORES</button>
+  <p class="small">Versión personalizada · Un jugador · Guardado local</p>
+ </div>
+</div>
+
+<div class="overlay" id="scoresOverlay" style="display:none">
+ <div class="modal high-scores-modal">
+  <h2>HIGH SCORES</h2>
+  <p>TOP 10 · PUNTUACIONES DE ESTE DISPOSITIVO</p>
+  <p id="emptyHighScores" class="small">Todavía no hay puntuaciones guardadas.</p>
+  <ol id="highScoresList" class="high-scores-list"></ol>
+  <div class="actions" style="justify-content:center">
+   <button class="danger" id="clearScoresBtn">BORRAR PUNTUACIONES</button>
+   <button class="primary" id="closeScoresBtn">CERRAR</button>
+  </div>
+ </div>
+</div>
+
+<div class="overlay" id="choiceOverlay" style="display:none">
+ <div class="modal">
+  <h2 id="choiceTitle">ELIGE CÓMO COMBATIR</h2>
+  <p id="choiceText"></p>
+  <div class="actions" style="justify-content:center">
+   <button id="fistBtn">LUCHAR A MANO</button>
+   <button class="primary" id="weaponBtn">USAR ARMA</button>
+   <button id="cancelBtn">VOLVER</button>
+  </div>
+ </div>
+</div>
+
+<div class="overlay" id="roomChoiceOverlay" style="display:none">
+ <div class="modal">
+  <h2 id="roomChoiceTitle">¿QUÉ HACES CON LA ÚLTIMA CARTA?</h2>
+  <p id="roomChoiceText"></p>
+  <div class="actions" style="justify-content:center">
+   <button id="resolveRoomBtn">RESOLVER AQUÍ</button>
+   <button class="primary" id="deferRoomBtn">PASAR A LA SIGUIENTE</button>
+  </div>
+ </div>
+</div>
+
+<div id="raptorOverlay" class="raptor-overlay" role="dialog" aria-modal="true" aria-label="Velociraptor" aria-hidden="true">
+ <img src="images/raptor.jpg" alt="Velociraptor">
+</div>
+
+<div id="roomNotice" class="room-notice" role="status" aria-live="polite" aria-atomic="true">
+ <div class="room-animation" aria-hidden="true">
+  <img class="room-frame room-frame-a" src="images/warrior1.jpg" alt="">
+  <img class="room-frame room-frame-b" src="images/warrior2.jpg" alt="">
+ </div>
+ <img id="escapeFrame" class="escape-frame" src="images/scape.jpg" alt="Huyes de la habitación">
+ <strong id="roomNoticeText"></strong>
+</div>
+
+<script src="audio/midi-tracks.js" defer></script>
+<script src="midi-player.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>
+
+
