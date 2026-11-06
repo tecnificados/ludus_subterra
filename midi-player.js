@@ -28,10 +28,10 @@
    this.loopIndex=0;
    this.channels=Array.from({length:16},()=>({program:0,volume:100,expression:127,pan:64}));
    this.ensureAudio();
+   await this.context.resume();
    this.startTime=this.context.currentTime+0.15;
    this.timer=setInterval(()=>this.schedule(),25);
    this.schedule();
-   try{await this.context.resume()}catch{}
   }
 
   ensureAudio(){
@@ -44,8 +44,12 @@
    this.master.connect(this.context.destination);
   }
 
-  activate(){
-   if(this.context&&this.context.state==='suspended')this.context.resume().catch(()=>{});
+  async activate(){
+   if(!this.context)return false;
+   try{
+    if(this.context.state==='suspended')await this.context.resume();
+    return this.context.state==='running';
+   }catch{return false}
   }
 
   toggleMute(){

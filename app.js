@@ -14,6 +14,8 @@ let pending=null;
 const $=id=>document.getElementById(id);
 
 let backgroundMusic=null;
+let musicStarted=false;
+let musicStarting=null;
 let cheatBuffer='';
 let konamiBuffer=[];
 const konamiCode=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
@@ -59,9 +61,9 @@ document.addEventListener('keydown',event=>{
 function updateMusicButton(){
  const button=$('musicToggle');
  if(!button||!backgroundMusic)return;
- button.textContent=backgroundMusic.muted?'🔇 MÚSICA':'🔊 MÚSICA';
- button.setAttribute('aria-label',backgroundMusic.muted?'Activar música':'Silenciar música');
- button.setAttribute('aria-pressed',String(backgroundMusic.muted));
+ button.textContent=!musicStarted?'▶ ACTIVAR MÚSICA':backgroundMusic.muted?'🔇 MÚSICA':'🔊 MÚSICA';
+ button.setAttribute('aria-label',!musicStarted?'Activar música':backgroundMusic.muted?'Activar música':'Silenciar música');
+ button.setAttribute('aria-pressed',String(musicStarted&&backgroundMusic.muted));
 }
 
 function initMusic(){
@@ -72,16 +74,34 @@ function initMusic(){
  }
 
  backgroundMusic=new window.MidiPlayer(window.MIDI_TRACKS);
- button.onclick=()=>{
+ const startMusic=()=>{
+  if(musicStarted)return backgroundMusic.activate();
+  if(musicStarting)return musicStarting;
+  musicStarting=backgroundMusic.startRandom().then(()=>{
+   musicStarted=true;
+   button.title='';
+   updateMusicButton();
+   return true;
+  }).catch(()=>{
+   button.title='El navegador no pudo iniciar el audio. Pulsa para volver a intentarlo.';
+   return false;
+  }).finally(()=>{musicStarting=null});
+  return musicStarting;
+ };
+ document.addEventListener('pointerdown',event=>{
+  if(!event.target.closest?.('#musicToggle'))startMusic();
+ });
+ document.addEventListener('keydown',event=>{
+  if(!event.target.closest?.('#musicToggle'))startMusic();
+ });
+ document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&musicStarted)backgroundMusic.activate();
+ });
+ button.onclick=async()=>{
+  if(!musicStarted){await startMusic();return}
   backgroundMusic.toggleMute();
   updateMusicButton();
  };
- const activate=()=>backgroundMusic?.activate();
- document.addEventListener('pointerdown',activate,{once:true});
- document.addEventListener('keydown',activate,{once:true});
- backgroundMusic.startRandom().catch(()=>{
-  button.title='El navegador no pudo iniciar el audio. Pulsa para activar la música.';
- });
  updateMusicButton();
 }
 
@@ -118,7 +138,8 @@ function cardHTML(c,idx){
 }
 
 function log(msg){
- state.log.unshift(msg);
+ const remainingDamage=state.weapon?state.weaponDurability:'—';
+ state.log.unshift(`${msg} — Vida: ${state.hp} / 20 · Daño restante del arma: ${remainingDamage}`);
 }
 
 function startGame(){
@@ -130,8 +151,8 @@ function startGame(){
   hp:20,
   weapon:null,
   weaponDurability:0,
-  lastMonsterFaced:null,
   monstersDefeated:0,
+  defeatedMonsters:[],
   roomsResolved:0,
   avoided:false,
   roomNo:0,
@@ -251,25 +272,22 @@ function beginNextRoom(transition='room'){
  showRoomNotice(transition);
 }
 
-function updateLastMonsterIndicator(){
- const last=state.lastMonsterFaced;
- $('weaponLimit').textContent='ÚLTIMO MONSTRUO: '+(last?`${last.r}${last.s}`:'NINGUNO');
-}
-
 function render(){
  if(!state)return;
 
  $('hp').textContent=state.hp+' / 20';
  $('hpfill').style.width=Math.max(0,state.hp/20*100)+'%';
 
- $('remaining').textContent=state.deck.length;
+ $('remaining').textContent=`${state.deck.length} / 52`;
+ $('remainingfill').style.width=Math.max(0,state.deck.length/52*100)+'%';
+ $('remainingfill').parentElement.setAttribute('aria-valuenow',String(state.deck.length));
  $('roomNo').textContent=String(state.roomNo).padStart(2,'0');
-
- $('roomStatus').textContent='Puedes usar varias pociones';
 
  $('roomProgress').textContent=state.resolved+' / 3 resueltas';
 
- $('totalDefeated').textContent=state.monstersDefeated||0;
+ $('defeatedMonsters').textContent=state.defeatedMonsters?.length
+  ?state.defeatedMonsters.map(card=>`${card.r}${card.s}`).join(' ')
+  :'—';
 
  $('weaponCard').className='weapon-card'+(state.weapon?'':' empty');
 
@@ -282,8 +300,6 @@ function render(){
   :'Todavía no has encontrado un arma';
 
  $('weaponPower').textContent='DAÑO RESTANTE: '+(state.weapon?state.weaponDurability:'—');
-
- updateLastMonsterIndicator();
 
  $('room').innerHTML=state.room.map((c,i)=>cardHTML(c,i)).join('');
 
@@ -332,10 +348,10 @@ function selectCard(i){
    if(c.v>=state.weaponDurability){
     explanation=`Puedes usar tu arma, pero se romperá. Absorberá los ${state.weaponDurability} puntos que le quedan y perderás ${c.v-state.weaponDurability} de vida.`;
    }else{
-    explanation=`Puedes luchar a mano limpia o utilizar tu arma. Absorberá ${c.v} puntos y le quedarán ${state.weaponDurability-c.v}.`;
+    explanation=`Puedes combatir cuerpo a cuerpo o utilizar tu arma. Absorberá ${c.v} puntos y le quedarán ${state.weaponDurability-c.v}.`;
    }
   }else{
-   explanation='No tienes un arma equipada; combatirás a mano limpia.';
+   explanation='No tienes un arma equipada; combatirás cuerpo a cuerpo.';
   }
 
   $('choiceText').textContent=`Este monstruo tiene fuerza ${c.v}. ${explanation}`;
@@ -380,10 +396,9 @@ function resolve(i,method){
  }
 
  if(t==='monster'){
-  state.lastMonsterFaced={r:c.r,s:c.s,v:c.v};
-  updateLastMonsterIndicator();
   let damage=c.v;
 
+  let historyMessage='';
   if(method==='weapon'&&state.weapon){
 
    const weaponDurability=state.weaponDurability;
@@ -392,9 +407,8 @@ function resolve(i,method){
 
     damage=c.v-weaponDurability;
 
-    log(`¡Tu arma se rompe contra el monstruo ${c.r}${c.s}! Absorbe sus ${weaponDurability} puntos de durabilidad restantes y pierdes ${damage} de vida.`);
-
     say(`¡Arma destruida! Monstruo ${c.v} − durabilidad ${weaponDurability} = ${damage} de daño.`);
+    historyMessage=`¡Tu arma se rompe contra el monstruo ${c.r}${c.s}! Absorbe sus ${weaponDurability} puntos de durabilidad restantes y pierdes ${damage} de vida.`;
 
     state.weapon=null;
     state.weaponDurability=0;
@@ -404,23 +418,26 @@ function resolve(i,method){
     damage=0;
     state.weaponDurability-=c.v;
 
-    log(`Derrotas al monstruo ${c.r}${c.s} con tu arma. Absorbe ${c.v} puntos; quedan ${state.weaponDurability}. No pierdes vida.`);
     say(`¡Victoria! El arma absorbe ${c.v} puntos; le quedan ${state.weaponDurability}.`);
+    historyMessage=`Derrotas al monstruo ${c.r}${c.s} con tu arma. Absorbe ${c.v} puntos; quedan ${state.weaponDurability}. No pierdes vida.`;
    }
 
   }else{
 
    damage=c.v;
 
-   log(`Combates a mano limpia contra ${c.r}${c.s}. Pierdes ${damage} de vida.`);
-   say(`Combate a mano limpia: pierdes ${damage} puntos de vida.`);
+   say(`Combate cuerpo a cuerpo: pierdes ${damage} puntos de vida.`);
+   historyMessage=`Combates cuerpo a cuerpo contra ${c.r}${c.s}. Pierdes ${damage} de vida.`;
   }
 
   // Contador general: suma cualquier monstruo derrotado.
   // No se reinicia al cambiar o romper un arma.
   state.monstersDefeated=(state.monstersDefeated||0)+1;
+  if(!Array.isArray(state.defeatedMonsters))state.defeatedMonsters=[];
+  state.defeatedMonsters.push({r:c.r,s:c.s});
 
   state.hp=Math.max(0,state.hp-damage);
+  log(historyMessage);
 
   removeCard(i);
 
@@ -589,11 +606,14 @@ function load(){
   // Compatibilidad con partidas guardadas anteriormente.
   if(s.monstersDefeated===undefined)s.monstersDefeated=0;
   if(s.roomsResolved===undefined)s.roomsResolved=0;
-  if(!s.lastMonsterFaced){
-   const match=Array.isArray(s.log)
-    ?s.log.map(entry=>String(entry).match(/(?:monstruo|contra)(?:\s+el\s+monstruo)?\s+(10|[2-9JQKA])([♠♣])/i)).find(Boolean)
-    :null;
-   s.lastMonsterFaced=match?{r:match[1].toUpperCase(),s:match[2],v:value(match[1].toUpperCase())}:null;
+  if(!Array.isArray(s.defeatedMonsters)){
+   const defeatedPattern=/(?:¡Tu arma se rompe contra el monstruo|Derrotas al monstruo|Combates (?:a mano limpia|cuerpo a cuerpo) contra)\s+(10|[2-9JQKA])([♠♣])/i;
+   s.defeatedMonsters=Array.isArray(s.log)
+    ?s.log.slice().reverse().flatMap(entry=>{
+     const match=String(entry).match(defeatedPattern);
+     return match?[{r:match[1].toUpperCase(),s:match[2]}]:[];
+    })
+    :[];
   }
   if(s.weaponDurability===undefined)s.weaponDurability=s.weapon?s.weapon.v:0;
 

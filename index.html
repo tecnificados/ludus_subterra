@@ -15,7 +15,7 @@
   <div class="sub">RETRO DUNGEON · 16 BITS</div>
  </div>
  <div class="header-actions">
-  <button id="musicToggle" type="button" aria-label="Silenciar música" aria-pressed="false">🔊 MÚSICA</button>
+  <button id="musicToggle" type="button" aria-label="Activar música" aria-pressed="false">▶ ACTIVAR MÚSICA</button>
   <button id="highScoresBtn" type="button">HIGH SCORES</button>
   <button id="helpBtn">¿CÓMO SE JUEGA?</button>
  </div>
@@ -29,13 +29,14 @@
    <div class="hpbar"><div class="hpfill" id="hpfill"></div></div>
   </div>
   <div class="stat">
-   <label>MAZMORRA RESTANTE</label>
-   <strong id="remaining">52</strong>
+   <label>NAIPES RESTANTES</label>
+   <strong id="remaining">52 / 52</strong>
+   <div class="hpbar" role="progressbar" aria-label="Naipes restantes" aria-valuemin="0" aria-valuemax="52" aria-valuenow="52"><div class="hpfill deckfill" id="remainingfill"></div></div>
   </div>
   <div class="stat">
    <label>HABITACIÓN</label>
    <strong id="roomNo">01</strong>
-   <div class="small" id="roomStatus">Puedes usar varias pociones</div>
+   <button class="room-escape-btn" id="avoidBtn" disabled>ESCAPAR</button>
   </div>
  </section>
 
@@ -46,16 +47,15 @@
   </div>
 
   <div>
-   <div class="eyebrow">INVENTARIO Y LÍMITE DE COMBATE</div>
+   <div class="eyebrow">INVENTARIO Y COMBATE</div>
    <strong id="weaponName" style="color:var(--gold)">Todavía no has encontrado un arma</strong>
 
    <div class="weapon-meta">
     <span class="pill" id="weaponPower">DAÑO RESTANTE: —</span>
-    <span class="pill" id="weaponLimit">ÚLTIMO MONSTRUO: SIN ARMA</span>
    </div>
 
    <div class="monster-stack">
-    CRIATURAS DERROTADAS: <strong id="totalDefeated">0</strong>
+    MONSTRUOS DERROTADOS: <strong id="defeatedMonsters">—</strong>
    </div>
   </div>
  </section>
@@ -69,7 +69,6 @@
 
  <div class="actions">
   <button class="primary" id="newBtn">NUEVA PARTIDA</button>
-  <button id="avoidBtn" disabled>ESCAPAR DE LA SALA</button>
   <button id="saveBtn">GUARDAR</button>
   <button id="resetSaveBtn">BORRAR GUARDADO</button>
  </div>
@@ -131,7 +130,7 @@
   <p id="choiceText"></p>
   <p id="choiceStatus" class="combat-status" aria-live="polite"></p>
   <div class="actions" style="justify-content:center">
-   <button id="fistBtn">LUCHAR A MANO</button>
+   <button id="fistBtn">COMBATE CUERPO A CUERPO</button>
    <button class="primary" id="weaponBtn">USAR ARMA</button>
    <button id="cancelBtn">VOLVER</button>
   </div>
