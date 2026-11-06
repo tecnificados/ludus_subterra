@@ -95,3 +95,50 @@ footer a{color:var(--gold)}
 .high-score-rank{color:var(--gold);font-size:18px;font-weight:bold;text-align:center}
 .high-score-value{color:var(--cream);font-size:14px;font-weight:bold}
 .high-score-detail{display:block;margin-top:4px;color:var(--muted);font-size:10px;line-height:1.5}
+.combat-status{white-space:pre-line;background:#14221e;border:1px solid #64745e;color:var(--gold);padding:12px;font-size:12px;line-height:1.8}
+
+/* Keep cards and controls comfortable to use on a phone in portrait mode. */
+@media(max-width:560px){
+ header{min-height:0;padding:18px 14px;gap:16px}
+ .header-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:8px}
+ .header-actions button{min-height:44px;padding:9px 7px;font-size:clamp(10px,3vw,13px)}
+ main{padding:10px 12px 28px}
+ .topline{gap:8px}
+ .stat,.panel{padding:10px}
+ .stat label,.eyebrow{font-size:9px;letter-spacing:1px}
+ .inventory{grid-template-columns:76px minmax(0,1fr);gap:10px}
+ .weapon-card{width:68px;min-height:96px}
+ #weaponName{display:block;overflow-wrap:anywhere;font-size:14px}
+ .weapon-meta{gap:6px}
+ .pill{font-size:10px;padding:6px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .card{min-height:clamp(132px,38vw,176px);padding:8px;touch-action:manipulation}
+ .card .corner{font-size:19px}
+ .card .big{font-size:clamp(38px,12vw,52px)}
+ .card .kind{font-size:9px}
+ .actions{gap:8px}
+ .actions button{flex:1 1 calc(50% - 8px);min-height:46px;padding:10px 8px;font-size:11px}
+ .room-head h2{font-size:13px;letter-spacing:1px}
+ .message{font-size:11px}
+ .overlay{padding:10px}
+ .modal{max-height:94dvh;padding:18px 14px}
+ .modal .actions button{flex:1 1 100%}
+ footer{padding:18px 12px;line-height:1.7}
+}
+
+@media(max-width:360px){
+ .logo{font-size:23px;letter-spacing:2px}
+ .sub{font-size:9px;letter-spacing:1px}
+ .topline{grid-template-columns:1fr 1fr}
+ .stat strong{font-size:17px}
+ .card{min-height:126px;padding:6px}
+ .card .corner{font-size:16px}
+ .card .big{font-size:36px}
+ .weapon-meta{display:grid}
+ .pill{line-height:1.35}
+}
+
+@media(hover:none){
+ button:hover:not(:disabled),.card:hover:not(:disabled){transform:none}
+ button:active:not(:disabled),.card:active:not(:disabled){filter:brightness(1.12)}
+}

@@ -78,7 +78,7 @@
 
  <section class="panel" style="margin-top:14px">
   <span class="eyebrow">CRÓNICA DE LA MAZMORRA</span>
-  <ol class="log" id="log">
+  <ol class="log" id="log" reversed>
    <li>Tu aventura todavía no ha comenzado.</li>
   </ol>
  </section>
@@ -104,7 +104,7 @@
   Sobrevive usando tus armas, administrando tus pociones y eligiendo bien tus combates.</p>
   <section id="endHistory" class="end-history" aria-label="Historial completo de la partida">
    <h3>HISTORIAL COMPLETO</h3>
-   <ol id="endLog" class="end-history-list"></ol>
+   <ol id="endLog" class="end-history-list" reversed></ol>
   </section>
   <button class="primary" id="startBtn">COMENZAR PARTIDA</button>
   <button id="viewScoresBtn" type="button">HIGH SCORES</button>
@@ -129,6 +129,7 @@
  <div class="modal">
   <h2 id="choiceTitle">ELIGE CÓMO COMBATIR</h2>
   <p id="choiceText"></p>
+  <p id="choiceStatus" class="combat-status" aria-live="polite"></p>
   <div class="actions" style="justify-content:center">
    <button id="fistBtn">LUCHAR A MANO</button>
    <button class="primary" id="weaponBtn">USAR ARMA</button>

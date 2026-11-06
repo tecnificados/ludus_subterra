@@ -339,6 +339,9 @@ function selectCard(i){
   }
 
   $('choiceText').textContent=`Este monstruo tiene fuerza ${c.v}. ${explanation}`;
+  $('choiceStatus').textContent=canWeapon
+   ?`VIDA ACTUAL: ${state.hp} / 20\nDAÑO RESTANTE DEL ARMA: ${state.weaponDurability}`
+   :`VIDA ACTUAL: ${state.hp} / 20`;
 
   $('weaponBtn').disabled=!canWeapon;
   $('choiceOverlay').style.display='flex';
