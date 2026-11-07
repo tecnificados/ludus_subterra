@@ -36,7 +36,7 @@ La potencia y la durabilidad inicial de un arma equivalen al valor de su carta. 
 
 No hay restricción por los monstruos derrotados anteriormente: la elección depende de la durabilidad restante. Un arma nueva empieza con durabilidad igual a su potencia; equipar otra descarta la anterior. El combate cuerpo a cuerpo no desgasta el arma. El inventario muestra las cartas de monstruo derrotadas durante la partida.
 
-Cada monstruo retirado incrementa el contador de criaturas derrotadas, tanto si se vence con arma como a mano limpia. El contador persiste entre habitaciones y armas.
+Cada monstruo retirado incrementa el contador de criaturas derrotadas, tanto si se vence con arma como en combate cuerpo a cuerpo. El contador persiste entre habitaciones y armas.
 
 ## Armas, pociones y vida
 
@@ -50,7 +50,7 @@ La victoria ocurre cuando se vacían tanto la habitación como la baraja, o cuan
 
 **Puntuación = monstruos derrotados + habitaciones resueltas**
 
-Una habitación cuenta como resuelta al completar sus tres elecciones (o al retirar todas sus cartas si quedan menos de tres). En la última habitación, cuando no quedan cartas en la baraja, puedes escapar dejando atrás la carta restante; la partida termina como victoria. Si dejas atrás un monstruo, la puntuación recibe una pieza de plata; si no queda ningún enemigo, recibe una pieza de oro. Las habitaciones evitadas no cuentan. La puntuación nunca puede ser negativa. El resultado muestra ambos contadores y la puntuación final.
+Una habitación cuenta como resuelta al completar sus tres elecciones (o al retirar todas sus cartas si quedan menos de tres). En la última habitación, cuando no quedan cartas en la baraja, puedes escapar dejando atrás la carta restante; la partida termina como victoria. Si dejas atrás un monstruo, la victoria queda marcada con una pieza de plata; si no queda ningún enemigo, con una pieza de oro. Las habitaciones evitadas no cuentan. La puntuación nunca puede ser negativa. El resultado muestra ambos contadores y la puntuación final.
 
 ## Interfaz y controles
 
@@ -60,6 +60,7 @@ Una habitación cuenta como resuelta al completar sus tres elecciones (o al reti
 - **Guardar:** almacena el estado actual en el navegador.
 - **Borrar guardado:** elimina la copia local; no borra el estado de la partida que está en pantalla.
 - **Cambio de habitación:** muestra durante tres segundos una animación con `images/warrior1.jpg` y `images/warrior2.jpg`.
+- **Resultado:** muestra `images/warrior_happy.jpg` al ganar y `images/death.jpg` al perder.
 - **Crónica:** conserva todos los eventos de la partida, con los más recientes primero, e indica la vida y la durabilidad del arma tras cada acción. Al terminar, el historial completo aparece dentro del popup final.
 
 Al cargar la página se intenta restaurar el guardado. Si no hay uno válido, se muestra el panel de inicio. Una partida restaurada se reanuda sin el panel de inicio.

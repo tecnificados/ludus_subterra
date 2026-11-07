@@ -8,7 +8,7 @@ El documento está en español (`lang="es"`). La interfaz usa diseño adaptable:
 
 ## Organización del HTML
 
-- **Encabezado:** imagen panorámica `images/header.jpg` con capa de contraste, título, botón para silenciar/reactivar música, acceso a HIGH SCORES y botón de reglas.
+- **Encabezado:** imagen panorámica `images/header.jpg` con capa de contraste, título, botón que activa la música en la primera interacción y luego permite silenciarla/reactivarla, acceso a HIGH SCORES y botón de reglas.
 - **Indicadores:** vida, cartas restantes en la baraja (cantidad actual sobre 52, con barra de progreso) y número de habitación; el botón **Escapar** está dentro del indicador de habitación.
 - **Inventario:** arma activa, durabilidad restante y lista de cartas de monstruo derrotadas.
 - **Habitación:** botones de carta generados desde el estado y progreso de cartas resueltas.
@@ -61,7 +61,7 @@ Cada carta tiene `s` (palo), `r` (rango), `v` (valor) e `id` (palo concatenado c
 
 ## Persistencia y seguridad de renderizado
 
-Las 10 mejores puntuaciones se guardan por separado en `ludusSubterraHighScores` y pueden borrarse desde el panel HIGH SCORES. Las victorias guardan la medalla (`gold` o `silver`) junto al resultado. La clave de partida es `ludusSubterraSave`; `load()` migra datos existentes desde `scoundrelRetroSave` cuando todavía no hay una partida nueva. `load()` comprueba que el JSON se pueda leer y que `deck` y `room` sean arreglos; en partidas antiguas reconstruye `defeatedMonsters` desde la crónica y asigna valores predeterminados a los campos nuevos. El crédito de música y el enlace a CC BY 4.0 aparecen en el pie; la copia de la licencia está en `audio/License.txt`.
+Las 10 mejores puntuaciones se guardan por separado en `ludusSubterraHighScores` y pueden borrarse desde el panel HIGH SCORES. Las victorias guardan la medalla (`gold` o `silver`) junto al resultado. Para puntuaciones antiguas sin ese campo, la interfaz infiere plata si se derrotaron menos de 26 monstruos y oro en caso contrario. La clave de partida es `ludusSubterraSave`; `load()` migra datos existentes desde `scoundrelRetroSave` cuando todavía no hay una partida nueva. `load()` comprueba que el JSON se pueda leer y que `deck` y `room` sean arreglos; en partidas antiguas reconstruye `defeatedMonsters` desde la crónica y asigna valores predeterminados a los campos nuevos. El crédito de música y el enlace a CC BY 4.0 aparecen en el pie; la copia de la licencia está en `audio/License.txt`.
 
 El HTML de mensajes de la crónica pasa por `escapeHTML()`. Los nombres de carta y etiquetas generados por la aplicación proceden de rangos y palos constantes. La ayuda y el panel de fin usan contenido HTML estático más valores numéricos del estado.
 

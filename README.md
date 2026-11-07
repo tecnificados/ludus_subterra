@@ -6,7 +6,7 @@ Está basado en **Scoundrel**, el juego de cartas en solitario creado por Zach G
 
 ## Cómo jugar
 
-Abre `index.html` en un navegador y pulsa **Comenzar partida** o **Nueva partida**. Empiezas con 20 puntos de vida y una baraja completa de 52 cartas. En cada habitación se muestran cuatro cartas. Al resolver tres, puedes resolver la última en esa habitación o llevarte el objeto/huir del monstruo para que la carta pase a la siguiente. También puedes evitar una habitación completa; no puedes evitar dos habitaciones seguidas.
+Abre `index.html` en un navegador y pulsa **Comenzar partida** o **Nueva partida**. Empiezas con 20 puntos de vida y una baraja completa de 52 cartas. En cada habitación se muestran cuatro cartas. Al resolver tres, puedes resolver la última en esa habitación o llevarte el objeto/huir del monstruo para que la carta pase a la siguiente. En la última habitación puedes escapar y dejar la carta pendiente atrás. También puedes evitar una habitación completa; no puedes evitar dos habitaciones seguidas.
 
 - **♠ y ♣ — monstruos:** su fuerza equivale al valor de la carta.
 - **♦ — armas:** equipar una reemplaza y descarta el arma actual.
@@ -34,7 +34,7 @@ La partida se almacena en el `localStorage` del navegador bajo la clave `ludusSu
 ├── styles.css               # Estilos y diseño adaptable
 ├── app.js                   # Reglas, interfaz y control de música
 ├── midi-player.js           # Reproductor MIDI Web Audio
-├── images/                  # Fondo de cabecera y fotogramas de transición
+├── images/                  # Fondo, transiciones, personaje, derrota y victoria
 ├── audio/                   # Pistas originales y datos locales del reproductor
 ├── README.md                # Introducción y guía de inicio
 └── docs/
@@ -42,7 +42,7 @@ La partida se almacena en el `localStorage` del navegador bajo la clave `ludusSu
     └── implementacion.md
 ```
 
-La música selecciona una pista MIDI al azar y la repite. Comienza con el primer toque o interacción con la página; el botón **Activar música** también puede iniciarla. Después, ese botón permite silenciarla o reactivarla. La atribución aparece en el pie de página.
+La música selecciona una pista MIDI al azar y la repite. Comienza con el primer toque o interacción con la página; el botón **MÚSICA** también puede iniciarla. Después, ese botón permite silenciarla o reactivarla. La atribución aparece en el pie de página.
 
 No hay proceso de compilación. La interfaz está separada en `index.html`, `styles.css` y `app.js`; el audio MIDI está en `midi-player.js` y `audio/`.
 
