@@ -13,11 +13,11 @@ Abre `index.html` en un navegador y pulsa **Comenzar partida** o **Nueva partida
 - **♥ — pociones:** recuperan vida hasta el máximo de 20; puedes usar varias por habitación.
 - **Valores:** 2–10 conservan su número; J=11, Q=12, K=13 y A=14.
 
-Al elegir un monstruo puedes luchar a mano limpia o usar un arma si las reglas de combate lo permiten. Consulta [docs/reglas-y-mecanicas.md](docs/reglas-y-mecanicas.md) para las reglas completas, la puntuación y los casos concretos.
+Al elegir un monstruo puedes combatir cuerpo a cuerpo o usar un arma si las reglas de combate lo permiten. La interfaz muestra la vida, las cartas restantes de la baraja y las cartas de monstruo vencidas. Consulta [docs/reglas-y-mecanicas.md](docs/reglas-y-mecanicas.md) para las reglas completas, la puntuación y los casos concretos.
 
 ## Guardado
 
-Las 10 mejores puntuaciones se guardan en el navegador y se consultan con **HIGH SCORES**, junto al control de música; el panel permite borrarlas.
+Las 10 mejores puntuaciones se guardan en el navegador y se consultan con **HIGH SCORES**, junto al control de música; el panel permite borrarlas. Las victorias muestran una pieza de plata si se dejó un monstruo atrás, o una pieza de oro si se escapó sin dejar enemigos.
 
 La partida se almacena en el `localStorage` del navegador bajo la clave `ludusSubterraSave`; si hay una partida anterior guardada con la clave antigua, se migra al cargar. Usa **Guardar** para guardar manualmente y **Borrar guardado** para eliminar esa copia. El juego también guarda automáticamente al resolver una carta y al terminar la partida. Los datos permanecen en ese navegador y dispositivo.
 
@@ -42,7 +42,7 @@ La partida se almacena en el `localStorage` del navegador bajo la clave `ludusSu
     └── implementacion.md
 ```
 
-La música selecciona una pista MIDI al azar y la repite. El botón **Música** de la cabecera permite silenciarla o reactivarla. Algunos navegadores bloquean el audio automático hasta la primera interacción. La atribución aparece en el pie de página.
+La música selecciona una pista MIDI al azar y la repite. Comienza con el primer toque o interacción con la página; el botón **Activar música** también puede iniciarla. Después, ese botón permite silenciarla o reactivarla. La atribución aparece en el pie de página.
 
 No hay proceso de compilación. La interfaz está separada en `index.html`, `styles.css` y `app.js`; el audio MIDI está en `midi-player.js` y `audio/`.
 

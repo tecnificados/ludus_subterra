@@ -50,6 +50,7 @@ footer a{color:var(--gold)}
 .overlay{position:fixed;inset:0;background:#050b09dd;display:flex;align-items:center;justify-content:center;padding:18px;z-index:5}
 .modal{max-width:620px;width:100%;max-height:92vh;overflow-y:auto;background:var(--panel);border:4px solid #9a8151;box-shadow:8px 8px #050908;padding:24px;text-align:center}
 .modal h2{color:var(--gold);letter-spacing:2px}
+.end-death-image{display:block;width:100%;max-height:32vh;object-fit:contain;margin:12px auto;border:3px solid #9a8151}
 .modal p{font-size:12px;line-height:1.8;color:#ded8c8}
 .end-history{display:none;margin:16px 0;text-align:left}
 .end-history h3{margin:0 0 8px;color:var(--gold);font-size:12px;letter-spacing:2px}
@@ -93,10 +94,13 @@ footer a{color:var(--gold)}
 .high-scores-modal{text-align:left}
 .high-scores-modal h2,.high-scores-modal>p:first-of-type{text-align:center}
 .high-scores-list{max-height:48vh;overflow-y:auto;padding:0;margin:12px 0;list-style:none}
-.high-score-row{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;padding:10px 8px;border-bottom:1px solid #526452}
+.high-score-row{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:10px 8px;border-bottom:1px solid #526452}
 .high-score-rank{color:var(--gold);font-size:18px;font-weight:bold;text-align:center}
 .high-score-value{color:var(--cream);font-size:14px;font-weight:bold}
 .high-score-detail{display:block;margin-top:4px;color:var(--muted);font-size:10px;line-height:1.5}
+.high-score-medal{display:grid;place-items:center;width:28px;height:28px;border:2px solid;border-radius:50%;font-size:15px;line-height:1;box-shadow:inset 0 0 0 2px #080e0d55,2px 2px #080e0d}
+.high-score-medal.gold{color:#fff2b0;background:radial-gradient(circle at 35% 30%,#f8df78,#ad7626);border-color:#f6dc80}
+.high-score-medal.silver{color:#fff;background:radial-gradient(circle at 35% 30%,#e2e5e8,#777e87);border-color:#d4d9df}
 .combat-status{white-space:pre-line;background:#14221e;border:1px solid #64745e;color:var(--gold);padding:12px;font-size:12px;line-height:1.8}
 
 /* Keep cards and controls comfortable to use on a phone in portrait mode. */
@@ -125,6 +129,7 @@ footer a{color:var(--gold)}
  .overlay{padding:10px}
  .modal{max-height:94dvh;padding:18px 14px}
  .modal .actions button{flex:1 1 100%}
+ .end-history-list{padding-left:46px;padding-right:10px}
  footer{padding:18px 12px;line-height:1.7}
 }
 

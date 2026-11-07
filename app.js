@@ -154,6 +154,7 @@ function startGame(){
   monstersDefeated:0,
   defeatedMonsters:[],
   roomsResolved:0,
+  leftEnemyOnEscape:false,
   avoided:false,
   roomNo:0,
   resolved:0,
@@ -229,6 +230,7 @@ function deferLastCard(){
  state.roomsResolved=(state.roomsResolved||0)+1;
 
  if(state.deck.length===0){
+  state.leftEnemyOnEscape=cardType==='monster';
   log(`Escapas de la mazmorra y dejas atrás ${cardType==='monster'?'al monstruo '+card.r+card.s:'la carta '+card.r+card.s}.`);
   state.room=[];
   say('¡Enhorabuena! Has escapado de la mazmorra.');
@@ -452,6 +454,11 @@ function removeCard(i){
  state.room.splice(i,1);
  state.resolved++;
 
+ if(state.hp<=0){
+  render();
+  return;
+ }
+
  if(state.resolved>=3&&state.room.length>0){
   render();
   say('Queda una carta. Puedes resolverla aquí o llevarla/huir a la siguiente habitación.');
@@ -493,6 +500,7 @@ function saveHighScore(score){
   monsters:state.monstersDefeated||0,
   rooms:state.roomsResolved||0,
   won:!!state.won,
+  medal:state.won?(state.leftEnemyOnEscape?'silver':'gold'):null,
   date:new Date().toISOString()
  });
  scores.sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0)||Date.parse(b.date)-Date.parse(a.date));
@@ -516,13 +524,24 @@ function renderHighScores(){
   const value=document.createElement('span');
   value.className='high-score-value';
   value.textContent=(Number(entry.score)||0)+' PUNTOS';
+  let medal=null;
+  if(entry.won){
+   const silver=entry.medal?entry.medal==='silver':(Number(entry.monsters)||0)<26;
+   medal=document.createElement('span');
+   medal.className='high-score-medal '+(silver?'silver':'gold');
+   medal.textContent='✦';
+   medal.title=silver?'Pieza de plata: escapaste dejando un enemigo':'Pieza de oro: escapaste con la mazmorra limpia';
+   medal.setAttribute('role','img');
+   medal.setAttribute('aria-label',medal.title);
+  }
   const sub=document.createElement('span');
   sub.className='high-score-detail';
   const date=new Date(entry.date);
   const dateText=Number.isNaN(date.getTime())?'':date.toLocaleDateString('es-ES');
   sub.textContent=`${entry.won?'VICTORIA':'PARTIDA TERMINADA'} · ${Number(entry.monsters)||0} monstruos · ${Number(entry.rooms)||0} habitaciones · ${dateText}`;
   details.append(value,sub);
-  row.append(rank,details);
+  if(medal)row.append(rank,details,medal);
+  else row.append(rank,details);
   list.append(row);
  });
 }
@@ -536,6 +555,9 @@ function endGame(win){
  if(!state||state.gameOver)return;
  state.gameOver=true;
  state.won=win;
+
+ $('choiceOverlay').style.display='none';
+ $('roomChoiceOverlay').style.display='none';
 
  const score=(state.monstersDefeated||0)+(state.roomsResolved||0);
  state.score=score;
@@ -555,6 +577,8 @@ function endGame(win){
  $('overlay').querySelector('h2').textContent=win
   ?'¡MAZMORRA SUPERADA!'
   :'FIN DE LA PARTIDA';
+ $('endDeathImage').style.display=win?'none':'block';
+ $('endVictoryImage').style.display=win?'block':'none';
 
  $('overlay').querySelector('p').innerHTML=win
   ?`¡Enhorabuena! Has escapado con ${state.hp} puntos de vida.<br>
@@ -638,6 +662,8 @@ function help(){
  $('overlay').style.display='flex';
 
  $('overlay').querySelector('h2').textContent='REGLAS RÁPIDAS';
+ $('endDeathImage').style.display='none';
+ $('endVictoryImage').style.display='none';
 
  $('overlay').querySelector('p').innerHTML=
  'Ludus Subterra está basado en Scoundrel, el juego de cartas en solitario creado por Zach Gage y Kurt Bieg.'+
